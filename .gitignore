@@ -1,0 +1,10 @@
+# Design bundle (downloaded for implementation, not needed in repo)
+catalago-walt-flores/
+Catalogo_Walter_Flores_design.html
+design_download.tar.gz
+
+# Temp files
+*.pid
+*.ready
+server.js
+.playwright-mcp/
