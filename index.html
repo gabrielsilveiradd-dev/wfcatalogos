@@ -1883,14 +1883,14 @@
 (function(){
   const FAMILIES = [
     { name: 'Rosas', sci: 'Rosa', unit:'haste', note:'', flowers: [
-      { id:'rosa-vermelha',   name:'Rosa Vermelha',   img:'images/flores/rosa-vermelha.jpg',   price:8 },
-      { id:'rosa-pink',       name:'Rosa Pink',        img:'images/flores/rosa-pink.jpg',        price:8 },
-      { id:'rosa-salmao',     name:'Rosa Salmão',      img:'images/flores/rosa-salmao.jpg',      price:8 },
-      { id:'rosa-colombiana', name:'Rosa Colombiana',  img:'images/flores/rosa-colombiana.jpg',  price:35, bulk:{min:6,price:30} },
+      { id:'rosa-vermelha',   name:'Rosa Vermelha',   img:'images/flores/rosa-vermelha.jpg',   price:20 },
+      { id:'rosa-pink',       name:'Rosa Pink',        img:'images/flores/rosa-pink.jpg',        price:20 },
+      { id:'rosa-salmao',     name:'Rosa Salmão',      img:'images/flores/rosa-salmao.jpg',      price:20 },
+      { id:'rosa-colombiana', name:'Rosa Colombiana',  img:'images/flores/rosa-colombiana.jpg',  price:70, tiers:[{qty:2,total:120},{qty:3,total:150}] },
     ]},
     { name: 'Gérberas', sci: 'Gerbera', unit:'haste', note:'', flowers: [
-      { id:'gerbera-branca',  name:'Gérbera Branca',   img:'images/flores/gerbera-branca.jpg',  price:10, bulk:{min:6,price:8} },
-      { id:'gerbera-amarela', name:'Gérbera Amarela',  img:'images/flores/gerbera-amarela.jpg', price:10, bulk:{min:6,price:8} },
+      { id:'gerbera-branca',  name:'Gérbera Branca',   img:'images/flores/gerbera-branca.jpg',  price:20 },
+      { id:'gerbera-amarela', name:'Gérbera Amarela',  img:'images/flores/gerbera-amarela.jpg', price:20 },
     ]},
     { name: 'Crisântemos', sci: 'Chrysanthemum', unit:'galho', note:'galho 5–6 flores', flowers: [
       { id:'crisantemo-branco',  name:'Crisântemo Branco',  img:'images/flores/crisantemo-branco.jpg',  price:10, bulk:{min:6,price:8} },
@@ -1909,12 +1909,12 @@
       { id:'lisianthus-rosa',   name:'Lisianthus Rosa',   img:'images/flores/lisianthus-rosa.jpg',   price:20 },
     ]},
     { name: 'Lírios', sci: 'Lilium', unit:'galho', note:'galho 2–3 flores', flowers: [
-      { id:'lirio-amarelo', name:'Lírio Amarelo', img:'images/flores/lirio-amarelo.jpg', price:35 },
-      { id:'lirio-laranja', name:'Lírio Laranja', img:'images/flores/lirio-laranja.jpg', price:35 },
-      { id:'lirio-branco',  name:'Lírio Branco',  img:'images/flores/lirio-branco.jpg',  price:35 },
+      { id:'lirio-amarelo', name:'Lírio Amarelo', img:'images/flores/lirio-amarelo.jpg', price:120 },
+      { id:'lirio-laranja', name:'Lírio Laranja', img:'images/flores/lirio-laranja.jpg', price:120 },
+      { id:'lirio-branco',  name:'Lírio Branco',  img:'images/flores/lirio-branco.jpg',  price:120 },
     ]},
     { name: 'Girassóis', sci: 'Helianthus', unit:'haste', note:'', flowers: [
-      { id:'girassol', name:'Girassol', img:'images/flores/girassol.jpg', price:15 },
+      { id:'girassol', name:'Girassol', img:'images/flores/girassol.jpg', price:60 },
     ]},
     { name: 'Cravos', sci: 'Dianthus', unit:'haste', note:'', flowers: [
       { id:'cravo-vermelho', name:'Cravo Vermelho', img:'images/flores/cravo-vermelho.jpg', price:8 },
@@ -1928,7 +1928,17 @@
   const flById = Object.fromEntries(allFlowers.map(f => [f.id, f]));
   const brl = n => n.toLocaleString('pt-BR');
   function unitPrice(fl, qty){ return (fl.bulk && qty >= fl.bulk.min) ? fl.bulk.price : fl.price; }
-  function bouquetTotal(b){ let t=0; for(const id in b){ const fl=flById[id]; if(fl) t += unitPrice(fl, b[id]) * b[id]; } return t; }
+  function flowerSubtotal(fl, qty){
+    if(fl.tiers){
+      const tier = [...fl.tiers].reverse().find(t => qty >= t.qty);
+      if(tier){
+        const lastTier = fl.tiers[fl.tiers.length-1];
+        return tier.total + (qty - tier.qty) * Math.round(lastTier.total / lastTier.qty);
+      }
+    }
+    return unitPrice(fl, qty) * qty;
+  }
+  function bouquetTotal(b){ let t=0; for(const id in b){ const fl=flById[id]; if(fl) t += flowerSubtotal(fl, b[id]); } return t; }
 
   function toRoman(n){const m=[[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']];let r='';for(const[v,s]of m){while(n>=v){r+=s;n-=v;}}return r||'I';}
 
@@ -1963,7 +1973,8 @@
       card.dataset.id = fl.id;
       const meta = [];
       if (fam.note) meta.push(fam.note);
-      if (fl.bulk) meta.push('6+ por R$ ' + fl.bulk.price);
+      if (fl.tiers) fl.tiers.forEach(t => meta.push(t.qty + ' por R$ ' + t.total));
+      else if (fl.bulk) meta.push(fl.bulk.min + '+ por R$ ' + fl.bulk.price);
       card.innerHTML =
         '<div class="fc-img"><img src="' + fl.img + '" alt="' + fl.name + '" loading="lazy"><span class="fc-badge" data-badge>0</span></div>' +
         '<div class="fc-name">' + fl.name + '</div>' +
@@ -2098,12 +2109,13 @@
     ids.forEach(id => {
       const v = q[id];
       const fl = flById[id];
-      const up = unitPrice(fl, v);
+      const subtotal = flowerSubtotal(fl, v);
+      const up = fl.tiers ? Math.round(subtotal / v) : unitPrice(fl, v);
       stems += v;
       const li = document.createElement('li');
       li.innerHTML = '<span class="sm-nm">' + nameById[id] + '</span>'
         + '<span class="sm-qty">' + v + '\u00d7 R$' + brl(up) + '</span>'
-        + '<span class="sm-lt">R$ ' + brl(up * v) + '</span>';
+        + '<span class="sm-lt">R$ ' + brl(subtotal) + '</span>';
       list.appendChild(li);
     });
     empty.style.display = ids.length ? 'none' : 'block';
@@ -2139,8 +2151,8 @@
       if(!ids.length) return;
       lines.push('Buquê ' + (idx+1) + ':');
       ids.forEach(id => {
-        const v=b[id], fl=flById[id], up=unitPrice(fl,v);
-        lines.push('- ' + v + 'x ' + nameById[id] + ' (' + fl.unit + ') = R$ ' + brl(up*v) + ',00');
+        const v=b[id], fl=flById[id], sub=flowerSubtotal(fl,v);
+        lines.push('- ' + v + 'x ' + nameById[id] + ' (' + fl.unit + ') = R$ ' + brl(sub) + ',00');
       });
       const t = bouquetTotal(b); grand += t;
       lines.push('Subtotal: R$ ' + brl(t) + ',00');
