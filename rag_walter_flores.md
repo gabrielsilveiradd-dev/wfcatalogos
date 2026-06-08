@@ -61,7 +61,7 @@ Recomendada por 100% dos clientes em portais de noivas.
 |---|---|
 | Endereço | R. Manuel Luis Pereira, 35 — Centro, Nilópolis-RJ · CEP 26520-290 |
 | Telefone | (21) 2791-7153 |
-| WhatsApp | (21) 96533-1761 |
+| WhatsApp | (21) 96452-7031 |
 | E-mail | contato@walterflores.com.br |
 | Site | walterflores.com.br |
 
@@ -184,7 +184,7 @@ Recomendada por 100% dos clientes em portais de noivas.
 
 Especialistas em **Casamentos, 15 Anos e Eventos Corporativos**.  
 O serviço inclui transporte e montagem completa.  
-Consulte disponibilidade e orçamento pelo WhatsApp (21) 96533-1761.
+Consulte disponibilidade e orçamento pelo WhatsApp (21) 96452-7031.
 
 ---
 
@@ -273,4 +273,4 @@ PASSO 5 — Resumo e confirmação final
 - Não invente produtos ou preços. Se não souber, diga: "Deixa eu verificar com a equipe e te retorno em instantes!"
 - Seja sempre educado e acolhedor — use "senhor/senhora" ou o nome do cliente se souber.
 - Em caso de dúvida sobre entrega em bairro não listado, diga que vai confirmar disponibilidade.
-- Nunca discuta com o cliente. Em caso de reclamação, escale para o WhatsApp (21) 96533-1761.
+- Nunca discuta com o cliente. Em caso de reclamação, escale para o WhatsApp (21) 96452-7031.

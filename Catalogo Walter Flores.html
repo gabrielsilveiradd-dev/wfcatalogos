@@ -1922,7 +1922,7 @@
   ];
 
   const STORAGE_KEY = 'wf-customizer-v2';
-  const WHATSAPP = '5521965331761'; // <-- EDITE AQUI: WhatsApp da loja (55 + DDD + número)
+  const WHATSAPP = '5521964527031'; // <-- EDITE AQUI: WhatsApp da loja (55 + DDD + número)
   const allFlowers = FAMILIES.flatMap(f => f.flowers.map(fl => ({ ...fl, unit:f.unit, sci:f.sci })));
   const nameById = Object.fromEntries(allFlowers.map(f => [f.id, f.name]));
   const flById = Object.fromEntries(allFlowers.map(f => [f.id, f]));
@@ -2212,7 +2212,7 @@
 /* ===== Pedido por mensagem (cards de produto) =====
    Troque o número abaixo pelo WhatsApp da loja (formato: 55 + DDD + número) */
 (function(){
-  const WHATSAPP = '5521965331761'; // <-- EDITE AQUI: WhatsApp da loja
+  const WHATSAPP = '5521964527031'; // <-- EDITE AQUI: WhatsApp da loja
   const brl = n => n.toLocaleString('pt-BR');
 
   document.querySelectorAll('.card .card-footer').forEach(footer => {
